@@ -1,0 +1,101 @@
+#include <Servo.h>
+
+// entrada
+const int pinAnalogico2 = A0;
+const int pinAnalogico4 = A1;
+const int pinAnalogico15 = A2;
+const int pinAnalogico16 = A3;
+
+// salida para los servomotores
+int pinServo1 = 6;
+int pinServo2 = 7;
+int pinServo3 = 8;
+int pinServo4 = 10;
+int pinServo5 = 11;
+int pinServo6 = 12;
+int pinServo7 = 13;
+int pinServo8 = 9;
+int pinServo9 = 5;
+
+Servo servo1;
+Servo servo2;
+Servo servo3;
+Servo servo4;
+Servo servo5;
+Servo servo6;
+Servo servo7;
+Servo servo8;
+Servo servo9;
+
+void setup() {
+  //entradas
+  pinMode(pinAnalogico2, INPUT);
+  pinMode(pinAnalogico4, INPUT);
+  pinMode(pinAnalogico15, INPUT);
+  pinMode(pinAnalogico16, INPUT);
+  Serial.begin(9600);
+  
+}
+
+void loop () {
+  int estadoEntrada2 = digitalRead(pinAnalogico2);
+  int estadoEntrada4 = digitalRead(pinAnalogico4);
+  int estadoEntrada15 = digitalRead(pinAnalogico15);
+  int estadoEntrada16 = digitalRead(pinAnalogico16);
+  
+  if (estadoEntrada16 == LOW && estadoEntrada15 == LOW && estadoEntrada4 == LOW && estadoEntrada2 == HIGH) {
+    servo1.attach(pinServo1);
+    servo1.write(70);
+    delay(1500);
+    servo1.detach();
+  } 
+  else if (estadoEntrada16 == LOW && estadoEntrada15 == LOW && estadoEntrada4 == HIGH && estadoEntrada2 == LOW){
+    servo2.attach(pinServo2);
+    servo2.write(110);
+    delay(1500);
+    servo2.detach();
+  }
+  else if (estadoEntrada16 == LOW && estadoEntrada15 == LOW && estadoEntrada4 == HIGH && estadoEntrada2 == HIGH) {
+    servo3.attach(pinServo3);
+    servo3.write(70);
+    delay(1500);
+    servo3.detach();
+  } 
+  else if (estadoEntrada16 == LOW && estadoEntrada15 == HIGH && estadoEntrada4 == LOW && estadoEntrada2 == LOW){
+    servo4.attach(pinServo4);
+    servo4.write(70);
+    delay(1500);
+    servo4.detach();
+  }
+  else if (estadoEntrada16 == LOW && estadoEntrada15 == HIGH && estadoEntrada4 == LOW && estadoEntrada2 == HIGH) {
+    servo5.attach(pinServo5);
+    servo5.write(110);
+    delay(1500);
+    servo5.detach();
+  } 
+  else if (estadoEntrada16 == LOW && estadoEntrada15 == HIGH && estadoEntrada4 == HIGH && estadoEntrada2 == LOW){
+    servo6.attach(pinServo6);
+    servo6.write(70);
+    delay(1500);
+    servo6.detach();
+  }
+  else if (estadoEntrada16 == LOW && estadoEntrada15 == HIGH && estadoEntrada4 == HIGH && estadoEntrada2 == HIGH) {
+    servo7.attach(pinServo7);
+    servo7.write(110);
+    delay(1500);
+    servo7.detach();
+  } 
+  else if (estadoEntrada16 == HIGH && estadoEntrada15 == LOW && estadoEntrada4 == LOW && estadoEntrada2 == LOW){
+    servo8.attach(pinServo8);
+    servo8.write(70);
+    delay(1500);
+    servo8.detach();
+  }
+  else if (estadoEntrada16 == HIGH && estadoEntrada15 == LOW && estadoEntrada4 == LOW && estadoEntrada2 == HIGH){
+    servo9.attach(pinServo9);
+    servo9.write(110);
+    delay(1500);
+    servo9.detach();
+  }
+  delay(1000);
+}
