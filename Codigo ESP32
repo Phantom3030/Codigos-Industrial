@@ -1,0 +1,600 @@
+#include <Arduino.h>
+#include <Wire.h>
+#include <LiquidCrystal_I2C.h>
+#include <Keypad.h>
+#include <SPI.h>			// incluye libreria bus SPI
+#include <MFRC522.h>			// incluye libreria especifica para MFRC522
+
+
+#if defined(ESP32)
+  #define RST_PIN  13		// constante para referenciar pin de reset
+  #define SS_PIN  5
+#endif
+
+MFRC522 mfrc522(SS_PIN, RST_PIN);
+//
+byte LecturaUID[4]; 				// crea array para almacenar el UID leido
+byte Usuario1[4]= {0x13, 0x5A, 0xE0, 0x4B} ;    // UID de tarjeta leido en programa 1
+byte Usuario2[4]= {0x23, 0xB4, 0xAA, 0x1D} ;
+
+LiquidCrystal_I2C lcd(0x27, 16, 2); // Dirección I2C y tamaño de la pantalla LCD
+
+
+
+const uint8_t ROWS = 4;
+const uint8_t COLS = 3;
+
+char keys[ROWS][COLS] = {
+    {'1', '2', '3'},
+    {'4', '5', '6'},
+    {'7', '8', '9'},
+    {'*', '0', '#'}
+};
+
+uint8_t colPins[COLS] = {12, 14, 27};
+uint8_t rowPins[ROWS] = {32, 33, 25, 26};
+
+Keypad keypad = Keypad(makeKeymap(keys), rowPins, colPins, ROWS, COLS);
+
+
+void setup() {
+    Serial.begin(9600);
+    pinMode(15, OUTPUT);
+    pinMode(2, OUTPUT);
+    pinMode(4, OUTPUT);
+    pinMode(16, OUTPUT);
+    lcd.init();
+    lcd.backlight();
+    lcd.setCursor(0, 0);
+    lcd.print("Coloque su");
+    lcd.setCursor(0, 1);
+    lcd.print("tarjeta RFID");
+    delay(1000);
+    SPI.begin();
+    mfrc522.PCD_Init();
+}
+
+void loop() {
+
+    if (!mfrc522.PICC_IsNewCardPresent())
+    return;
+
+    if (!mfrc522.PICC_ReadCardSerial())
+    return;
+      
+    byte LecturaUID[4];
+    for (byte i = 0; i < mfrc522.uid.size; i++) {
+    LecturaUID[i] = mfrc522.uid.uidByte[i];
+  }
+
+  if (comparaUID(LecturaUID, Usuario1) || comparaUID(LecturaUID, Usuario2)) 
+  {
+
+    int jaja = 1;
+    while(jaja){
+    delay(200);
+    lcd.clear();
+    lcd.setCursor(0, 0);
+    lcd.print("Seleccione su");
+    lcd.setCursor(0, 1);
+    lcd.print("Snack: ");
+    char key = keypad.getKey();
+    if (key) 
+    {
+      if(key == '1')
+      {
+        lcd.clear();
+        lcd.setCursor(0, 0);
+        lcd.print("Seleccione su");
+        lcd.setCursor(0, 1);
+        lcd.print("Snack: 1");
+        delay(500);
+        int dato = 1;
+        while(dato)
+        {
+        delay(500);
+        lcd.clear();
+        lcd.print("Confirmar");
+        lcd.setCursor(0, 1);
+        lcd.print("Si (#) o No(*)");
+        
+        key = keypad.getKey();
+
+          if(key == '#')
+          {
+            menu(1);
+            delay(200);
+            lcd.clear();
+            dato = 0;
+            
+          }
+          else if(key == '*')
+          {
+            lcd.clear();
+            delay(200);
+            dato = 0;
+          }
+
+        }
+
+      }
+      else if(key == '2')
+      {
+        if(key == '2')
+      {
+        lcd.clear();
+        lcd.setCursor(0, 0);
+        lcd.print("Seleccione su");
+        lcd.setCursor(0, 1);
+        lcd.print("Snack: 2");
+        delay(2000);
+        int dato = 1;
+        while(dato)
+        {
+        delay(500);
+        lcd.clear();
+        lcd.print("Confirmar");
+        lcd.setCursor(0, 1);
+        lcd.print("Si (#) o No(*)");
+        
+        key = keypad.getKey();
+
+          if(key == '#')
+          {
+            menu(2);
+            delay(200);
+            lcd.clear();
+            dato = 0;
+          }
+          else if(key == '*')
+          {
+            lcd.clear();
+            delay(200);
+            dato = 0;
+          }
+
+        }
+
+      }
+      }
+            else if(key == '3')
+      {
+        if(key == '3')
+      {
+        lcd.clear();
+        lcd.setCursor(0, 0);
+        lcd.print("Seleccione su");
+        lcd.setCursor(0, 1);
+        lcd.print("Snack: 3");
+        delay(2000);
+        int dato = 1;
+        while(dato)
+        {
+        delay(500);
+        lcd.clear();
+        lcd.print("Confirmar");
+        lcd.setCursor(0, 1);
+        lcd.print("Si (#) o No(*)");
+        
+        key = keypad.getKey();
+
+          if(key == '#')
+          {
+            menu(3);
+            delay(200);
+            lcd.clear();
+            dato = 0;
+          }
+          else if(key == '*')
+          {
+            lcd.clear();
+            delay(200);
+            dato = 0;
+          }
+
+        }
+
+      }
+      }
+      else if(key == '4')
+      {
+        if(key == '4')
+      {
+        lcd.clear();
+        lcd.setCursor(0, 0);
+        lcd.print("Seleccione su");
+        lcd.setCursor(0, 1);
+        lcd.print("Snack: 4");
+        delay(2000);
+        int dato = 1;
+        while(dato)
+        {
+        delay(500);
+        lcd.clear();
+        lcd.print("Confirmar");
+        lcd.setCursor(0, 1);
+        lcd.print("Si (#) o No(*)");
+        
+        key = keypad.getKey();
+
+          if(key == '#')
+          {
+            menu(4);
+            delay(200);
+            lcd.clear();
+            dato = 0;
+          }
+          else if(key == '*')
+          {
+            lcd.clear();
+            delay(200);
+            dato = 0;
+          }
+
+        }
+
+      }
+      }
+      else if(key == '5')
+      {
+        if(key == '5')
+      {
+        lcd.clear();
+        lcd.setCursor(0, 0);
+        lcd.print("Seleccione su");
+        lcd.setCursor(0, 1);
+        lcd.print("Snack: 5");
+        delay(2000);
+        int dato = 1;
+        while(dato)
+        {
+        delay(500);
+        lcd.clear();
+        lcd.print("Confirmar");
+        lcd.setCursor(0, 1);
+        lcd.print("Si (#) o No(*)");
+        
+        key = keypad.getKey();
+
+          if(key == '#')
+          {
+            menu(5);
+            delay(200);
+            lcd.clear();
+            dato = 0;
+          }
+          else if(key == '*')
+          {
+            lcd.clear();
+            delay(200);
+            dato = 0;
+          }
+
+        }
+
+      }
+      }
+      else if(key == '6')
+      {
+        if(key == '6')
+      {
+        lcd.clear();
+        lcd.setCursor(0, 0);
+        lcd.print("Seleccione su");
+        lcd.setCursor(0, 1);
+        lcd.print("Snack: 6");
+        delay(2000);
+        int dato = 1;
+        while(dato)
+        {
+        delay(100);
+        lcd.clear();
+        lcd.print("Confirmar");
+        lcd.setCursor(0, 1);
+        lcd.print("Si (#) o No(*)");
+        
+        key = keypad.getKey();
+
+          if(key == '#')
+          {
+            menu(6);
+            delay(200);
+            lcd.clear();
+            dato = 0;
+          }
+          else if(key == '*')
+          {
+            lcd.clear();
+            delay(200);
+            dato = 0;
+          }
+
+        }
+
+      }
+      }
+      else if(key == '7')
+      {
+        if(key == '7')
+      {
+        lcd.clear();
+        lcd.setCursor(0, 0);
+        lcd.print("Seleccione su");
+        lcd.setCursor(0, 1);
+        lcd.print("Snack: 7");
+        delay(2000);
+        int dato = 1;
+        while(dato)
+        {
+        delay(100);
+        lcd.clear();
+        lcd.print("Confirmar");
+        lcd.setCursor(0, 1);
+        lcd.print("Si (#) o No(*)");
+        
+        key = keypad.getKey();
+
+          if(key == '#')
+          {
+            menu(7);
+            delay(200);
+            lcd.clear();
+            dato = 0;
+          }
+          else if(key == '*')
+          {
+            lcd.clear();
+            delay(200);
+            dato = 0;
+          }
+
+        }
+
+      }
+      }
+      else if(key == '8')
+      {
+        if(key == '8')
+      {
+        delay(600);
+        lcd.clear();
+        lcd.setCursor(0, 0);
+        lcd.print("Seleccione su");
+        lcd.setCursor(0, 1);
+        lcd.print("Snack: 8");
+        delay(2000);
+        int dato = 1;
+        while(dato)
+        {
+        delay(100);
+        lcd.clear();
+        lcd.print("Confirmar");
+        lcd.setCursor(0, 1);
+        lcd.print("Si (#) o No(*)");
+        
+        key = keypad.getKey();
+
+          if(key == '#')
+          {
+            menu(8);
+            delay(200);
+            lcd.clear();
+            dato = 0;
+          }
+          else if(key == '*')
+          {
+            lcd.clear();
+            delay(200);
+            dato = 0;
+          }
+
+        }
+
+      }
+      }
+      else if(key == '9')
+      {
+        if(key == '9')
+      {
+        lcd.clear();
+        lcd.setCursor(0, 0);
+        lcd.print("Seleccione su");
+        lcd.setCursor(0, 1);
+        lcd.print("Snack: 9");
+        delay(2000);
+        int dato = 1;
+        while(dato)
+        {
+        delay(75);
+        lcd.clear();
+        lcd.print("Confirmar");
+        lcd.setCursor(0, 1);
+        lcd.print("Si (#) o No(*)");
+        
+        key = keypad.getKey();
+
+          if(key == '#')
+          {
+            menu(9);
+            delay(200);
+            lcd.clear();
+            dato = 0;
+          }
+          else if(key == '*')
+          {
+            lcd.clear();
+            delay(200);
+            dato = 0;
+          }
+
+        }
+
+      }
+      }
+      else if(key == '*')
+      {
+        reinicio();
+      }
+
+    }
+    }
+  }
+
+  mfrc522.PICC_HaltA();
+}
+boolean comparaUID(byte lectura[], byte usuario[]) {
+  for (byte i = 0; i < mfrc522.uid.size; i++) {
+    if (lectura[i] != usuario[i]) {
+      return false;
+    }
+  }
+  return true;
+}
+
+// Salida para los servos motors
+void menu(int opcion){
+    switch (opcion) {
+        case 1:
+
+            Serial.println("Seleccionaste la opción 1");
+            digitalWrite(16, LOW);
+            digitalWrite(15, LOW);
+            digitalWrite(4, LOW);
+            digitalWrite(2, HIGH);
+            delay(1000);
+            digitalWrite(16, LOW);
+            digitalWrite(15, LOW);
+            digitalWrite(4, LOW);
+            digitalWrite(2, LOW);
+            delay(500);
+            reinicio();
+            break;
+        case 2:
+            
+            Serial.println("Seleccionaste la opción 2");
+            digitalWrite(16, LOW);
+            digitalWrite(15, LOW);
+            digitalWrite(4, HIGH);
+            digitalWrite(2, LOW);
+            delay(1000);
+            digitalWrite(16, LOW);
+            digitalWrite(15, LOW);
+            digitalWrite(4, LOW);
+            digitalWrite(2, LOW);
+            delay(200);
+            reinicio();
+            break;
+        case 3:
+            Serial.println("Seleccionaste la opción 3");
+            digitalWrite(16, LOW);
+            digitalWrite(15, LOW);
+            digitalWrite(4, HIGH);
+            digitalWrite(2, HIGH);
+            delay(1000);
+            digitalWrite(16, LOW);
+            digitalWrite(15, LOW);
+            digitalWrite(4, LOW);
+            digitalWrite(2, LOW);
+            delay(200);
+            reinicio();
+            break;
+        case 4:
+            Serial.println("Seleccionaste la opción 4");
+            digitalWrite(16, LOW);
+            digitalWrite(15, HIGH);
+            digitalWrite(4, LOW);
+            digitalWrite(2, LOW);
+            delay(1000);
+            digitalWrite(16, LOW);
+            digitalWrite(15, LOW);
+            digitalWrite(4, LOW);
+            digitalWrite(2, LOW);
+            delay(200);
+            reinicio();
+        break;
+
+        case 5:
+           Serial.println("Seleccionaste la opción 5");
+            digitalWrite(16, LOW);
+            digitalWrite(15, HIGH);
+            digitalWrite(4, LOW);
+            digitalWrite(2, HIGH);
+            delay(1000);
+            digitalWrite(16, LOW);
+            digitalWrite(15, LOW);
+            digitalWrite(4, LOW);
+            digitalWrite(2, LOW);
+            delay(200);
+            reinicio();
+        break;
+
+        case 6:
+            Serial.println("Seleccionaste la opción 6");
+            digitalWrite(16, LOW);
+            digitalWrite(15, HIGH);
+            digitalWrite(4, HIGH);
+            digitalWrite(2, LOW);
+            delay(1000);
+            digitalWrite(16, LOW);
+            digitalWrite(15, LOW);
+            digitalWrite(4, LOW);
+            digitalWrite(2, LOW);
+            delay(200);
+            reinicio();
+        break;
+        case 7:
+            Serial.println("Seleccionaste la opción 7");
+            digitalWrite(16, LOW);
+            digitalWrite(15, HIGH);
+            digitalWrite(4, HIGH);
+            digitalWrite(2, HIGH);
+            delay(1000);
+            digitalWrite(16, LOW);
+            digitalWrite(15, LOW);
+            digitalWrite(4, LOW);
+            digitalWrite(2, LOW);
+            delay(200);
+            reinicio();
+        break;
+        case 8:
+          Serial.println("Seleccionaste la opción 8");
+            digitalWrite(16, HIGH);
+            digitalWrite(15, LOW);
+            digitalWrite(4, LOW);
+            digitalWrite(2, LOW);
+            delay(1000);
+            digitalWrite(16, LOW);
+            digitalWrite(15, LOW);
+            digitalWrite(4, LOW);
+            digitalWrite(2, LOW);
+            delay(200);
+            reinicio();
+        break;
+
+        case 9:
+           Serial.println("Seleccionaste la opción 9");
+            digitalWrite(16, HIGH);
+            digitalWrite(15, LOW);
+            digitalWrite(4, LOW);
+            digitalWrite(2, HIGH);
+            delay(1000);
+            digitalWrite(16, LOW);
+            digitalWrite(15, LOW);
+            digitalWrite(4, LOW);
+            digitalWrite(2, LOW);
+            delay(200);
+            reinicio();
+        break;
+        default:
+            Serial.println("Opcion no reconocida");
+            
+            break;
+    }
+} 
+
+void reinicio()
+{
+  delay(1000);
+  ESP.restart();
+
+}
